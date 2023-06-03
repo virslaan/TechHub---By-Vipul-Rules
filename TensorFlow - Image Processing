@@ -1,0 +1,27 @@
+import tensorflow as tf
+from PIL import Image
+
+# Load the image using PIL
+image = Image.open("input.jpg")
+
+# Resize the image to a desired size
+resized_image = image.resize((224, 224))
+
+# Convert the image to a NumPy array
+image_array = tf.keras.preprocessing.image.img_to_array(resized_image)
+
+# Preprocess the image for a specific model
+preprocessed_image = tf.keras.applications.vgg16.preprocess_input(image_array)
+
+# Load the pre-trained VGG16 model
+model = tf.keras.applications.vgg16.VGG16(weights="imagenet")
+
+# Make predictions on the preprocessed image
+predictions = model.predict(tf.expand_dims(preprocessed_image, axis=0))
+
+# Get the top 5 predicted labels and their probabilities
+decoded_predictions = tf.keras.applications.vgg16.decode_predictions(predictions, top=5)[0]
+
+# Print the top predictions
+for label, _, probability in decoded_predictions:
+    print(f"{label}: {probability:.4f}")
