@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>VeeTasks</title>
   <style>
-    /* CSS for the modern design */
+    /* CSS for the pin board design and mobile compatibility */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -69,19 +68,42 @@
       list-style-type: none;
       padding: 0;
       margin: 0;
+      display: flex;
+      flex-wrap: wrap;
     }
 
     .task-list li {
       background-color: #fff;
       padding: 10px;
-      margin-bottom: 10px;
+      margin: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       cursor: move;
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .task-list li:hover {
       background-color: #f2f2f2;
+    }
+
+    .task-list li img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .remove-button {
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      margin-top: auto;
+      cursor: pointer;
     }
 
     footer {
@@ -89,6 +111,13 @@
       color: #fff;
       padding: 20px;
       text-align: center;
+    }
+
+    /* Mobile Compatibility */
+    @media (max-width: 768px) {
+      .task-list li {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -107,6 +136,7 @@
     <div class="todo-list">
       <h2>Todo List</h2>
       <input type="text" id="taskInput" placeholder="Add a new task">
+      <input type="file" id="imageInput" accept="image/*">
       <button onclick="addTask()">Add</button>
       <ul id="taskList" class="task-list">
         <!-- Tasks will be dynamically added here -->
@@ -123,14 +153,40 @@
     // JavaScript for the todo list functionality
     function addTask() {
       var taskInput = document.getElementById("taskInput");
+      var imageInput = document.getElementById("imageInput");
       var taskList = document.getElementById("taskList");
       var task = taskInput.value;
+      var image = imageInput.files[0];
 
       if (task !== "") {
         var listItem = document.createElement("li");
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var img = document.createElement("img");
+          img.src = e.target.result;
+          listItem.appendChild(img);
+        }
+
+        reader.readAsDataURL(image);
+
         listItem.appendChild(document.createTextNode(task));
+
+        var removeButton = document.createElement("button");
+        removeButton.appendChild(document.createTextNode("Remove"));
+        removeButton.classList.add("remove-button");
+        removeButton.addEventListener("click", function() {
+          taskList.removeChild(listItem);
+          updateTaskOrder();
+        });
+        listItem.appendChild(removeButton);
+
+        listItem.draggable = true;
+        listItem.addEventListener("dragstart", drag);
+
         taskList.appendChild(listItem);
         taskInput.value = "";
+        imageInput.value = "";
         updateTaskOrder();
       }
     }
@@ -146,7 +202,7 @@
       var tasks = taskList.getElementsByTagName("li");
       var taskOrder = [];
       for (var i = 0; i < tasks.length; i++) {
-        taskOrder.push(tasks[i].innerText);
+        taskOrder.push(tasks[i].innerHTML);
       }
       localStorage.setItem("taskOrder", JSON.stringify(taskOrder));
     }
@@ -158,7 +214,9 @@
         taskOrder = JSON.parse(taskOrder);
         for (var i = 0; i < taskOrder.length; i++) {
           var listItem = document.createElement("li");
-          listItem.appendChild(document.createTextNode(taskOrder[i]));
+          listItem.innerHTML = taskOrder[i];
+          listItem.draggable = true;
+          listItem.addEventListener("dragstart", drag);
           taskList.appendChild(listItem);
         }
       }
