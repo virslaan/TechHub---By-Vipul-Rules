@@ -3,14 +3,12 @@
 <head>
   <title>VeeTasks</title>
   <style>
-    /* CSS for the fancy design */
+    /* CSS for the pin board design and mobile compatibility */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f2f2f2;
-      background-image: linear-gradient(to bottom right, #ffd700, #000080);
-      background-size: cover;
     }
 
     header {
@@ -47,11 +45,31 @@
       margin-bottom: 20px;
     }
 
+    .todo-list input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .todo-list button {
+      padding: 10px 16px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .todo-list button.clear {
+      background-color: #ff0000;
+    }
+
     .task-list {
       list-style-type: none;
       padding: 0;
       margin: 0;
-      position: relative;
+      display: flex;
+      flex-wrap: wrap;
     }
 
     .task-list li {
@@ -65,7 +83,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: absolute;
     }
 
     .task-list li:hover {
@@ -79,10 +96,8 @@
       margin-bottom: 10px;
     }
 
-    .remove-button,
-    .record-button,
-    .play-button {
-      background-color: #4CAF50;
+    .remove-button {
+      background-color: #ff0000;
       color: #fff;
       border: none;
       padding: 5px 10px;
@@ -91,15 +106,18 @@
       cursor: pointer;
     }
 
-    .play-button {
-      background-color: #ff0000;
-    }
-
     footer {
       background-color: #333;
       color: #fff;
       padding: 20px;
       text-align: center;
+    }
+
+    /* Mobile Compatibility */
+    @media (max-width: 768px) {
+      .task-list li {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -162,22 +180,6 @@
           updateTaskOrder();
         });
         listItem.appendChild(removeButton);
-
-        var recordButton = document.createElement("button");
-        recordButton.appendChild(document.createTextNode("Record"));
-        recordButton.classList.add("record-button");
-        listItem.appendChild(recordButton);
-
-        var audioElement = document.createElement("audio");
-        audioElement.controls = true;
-        var playButton = document.createElement("button");
-        playButton.appendChild(document.createTextNode("Play"));
-        playButton.classList.add("play-button");
-        playButton.addEventListener("click", function() {
-          audioElement.play();
-        });
-        listItem.appendChild(audioElement);
-        listItem.appendChild(playButton);
 
         listItem.draggable = true;
         listItem.addEventListener("dragstart", drag);
