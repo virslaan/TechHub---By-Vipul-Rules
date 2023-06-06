@@ -38,6 +38,7 @@
 
     .todo-list {
       margin-bottom: 40px;
+      text-align: center;
     }
 
     .todo-list h2 {
@@ -64,6 +65,25 @@
       background-color: #ff0000;
     }
 
+    .task-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .task-list li {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: move;
+    }
+
+    .task-list li:hover {
+      background-color: #f2f2f2;
+    }
+
     footer {
       background-color: #333;
       color: #fff;
@@ -88,7 +108,9 @@
       <h2>Todo List</h2>
       <input type="text" id="taskInput" placeholder="Add a new task">
       <button onclick="addTask()">Add</button>
-      <ul id="taskList"></ul>
+      <ul id="taskList" class="task-list">
+        <!-- Tasks will be dynamically added here -->
+      </ul>
       <button onclick="clearTasks()" class="clear">Clear All</button>
     </div>
   </main>
@@ -109,13 +131,72 @@
         listItem.appendChild(document.createTextNode(task));
         taskList.appendChild(listItem);
         taskInput.value = "";
+        updateTaskOrder();
       }
     }
 
     function clearTasks() {
       var taskList = document.getElementById("taskList");
       taskList.innerHTML = "";
+      updateTaskOrder();
     }
+
+    function updateTaskOrder() {
+      var taskList = document.getElementById("taskList");
+      var tasks = taskList.getElementsByTagName("li");
+      var taskOrder = [];
+      for (var i = 0; i < tasks.length; i++) {
+        taskOrder.push(tasks[i].innerText);
+      }
+      localStorage.setItem("taskOrder", JSON.stringify(taskOrder));
+    }
+
+    function loadTasks() {
+      var taskList = document.getElementById("taskList");
+      var taskOrder = localStorage.getItem("taskOrder");
+      if (taskOrder) {
+        taskOrder = JSON.parse(taskOrder);
+        for (var i = 0; i < taskOrder.length; i++) {
+          var listItem = document.createElement("li");
+          listItem.appendChild(document.createTextNode(taskOrder[i]));
+          taskList.appendChild(listItem);
+        }
+      }
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      var taskId = event.dataTransfer.getData("text");
+      var taskList = document.getElementById("taskList");
+      var tasks = taskList.getElementsByTagName("li");
+      var dropTarget = event.target.closest("li");
+
+      if (dropTarget) {
+        var dropIndex = Array.from(tasks).indexOf(dropTarget);
+        var draggedTask = document.getElementById(taskId);
+        var draggedIndex = Array.from(tasks).indexOf(draggedTask);
+
+        if (draggedIndex !== dropIndex) {
+          taskList.removeChild(draggedTask);
+          if (draggedIndex < dropIndex) {
+            dropIndex--;
+          }
+          taskList.insertBefore(draggedTask, tasks[dropIndex]);
+          updateTaskOrder();
+        }
+      }
+    }
+
+    // Load tasks on page load
+    loadTasks();
   </script>
 </body>
 </html>
