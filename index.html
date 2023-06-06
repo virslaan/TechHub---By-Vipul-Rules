@@ -1,65 +1,71 @@
+Certainly! Here's an updated version of the code with the specified YouTube song embedded in the slider:
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>VeeTasks</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
   <style>
-    /* CSS for the awesome design */
-    /* Replace with your own styles or use a CSS framework like Bootstrap */
+    /* CSS for the modern design */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #f2f2f2;
     }
-    
+
     header {
       background-color: #333;
       color: #fff;
       padding: 20px;
       text-align: center;
     }
-    
+
     main {
       padding: 40px;
       text-align: center;
     }
-    
+
     .slider {
-      width: 80%;
-      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
     }
-    
+
+    .slider iframe {
+      width: 560px;
+      height: 315px;
+    }
+
     .todo-list {
-      margin-top: 40px;
-      text-align: center;
+      margin-bottom: 40px;
     }
-    
+
+    .todo-list h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
     .todo-list input[type="text"] {
-      padding: 8px;
+      padding: 10px;
       font-size: 16px;
+      margin-right: 10px;
     }
-    
+
     .todo-list button {
-      padding: 8px 16px;
+      padding: 10px 16px;
       font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
     }
-    
-    .todo-list ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    
-    .todo-list li {
-      margin: 8px 0;
-      font-size: 16px;
-    }
-    
+
     .todo-list button.clear {
       background-color: #ff0000;
-      color: #fff;
-      margin-top: 20px;
     }
-    
+
     footer {
       background-color: #333;
       color: #fff;
@@ -75,9 +81,9 @@
   
   <main>
     <div class="slider">
-      <div><iframe width="560" height="315" src="https://www.youtube.com/embed/video1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-      <div><iframe width="560" height="315" src="https://www.youtube.com/embed/video2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-      <div><iframe width="560" height="315" src="https://www.youtube.com/embed/video3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+      <div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/56hqrlQxMMI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
     </div>
     
     <div class="todo-list">
@@ -93,8 +99,6 @@
     <p>&copy; 2023 VeeTasks. All rights reserved.</p>
   </footer>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
   <script>
     // JavaScript for the todo list functionality
     function addTask() {
@@ -114,14 +118,6 @@
       var taskList = document.getElementById("taskList");
       taskList.innerHTML = "";
     }
-
-    // Slick Slider initialization
-    $('.slider').slick({
-      autoplay: true,
-      autoplaySpeed: 5000,
-      dots: true,
-      arrows: false
-    });
   </script>
 </body>
 </html>
