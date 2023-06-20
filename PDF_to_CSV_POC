@@ -1,0 +1,63 @@
+import PyPDF2
+import csv
+import re
+
+def extract_pdf_contents(input_file, output_file):
+    # Open the PDF file in read-binary mode
+    with open(input_file, 'rb') as file:
+        # Create a PDF reader object
+        pdf_reader = PyPDF2.PdfFileReader(file)
+
+        # Create a CSV file to store the extracted data
+        with open(output_file, 'w', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+
+            # Write the header row
+            writer.writerow(['Page', 'Title', 'Author', 'Year'])  # Customize the keys as per your requirements
+
+            # Iterate over each page in the PDF
+            for page_num in range(pdf_reader.numPages):
+                # Extract the text from the current page
+                page = pdf_reader.getPage(page_num)
+                text = page.extract_text()
+
+                # Extract relevant information using pattern matching or any other method
+                title = extract_title(text)
+                author = extract_author(text)
+                year = extract_year(text)
+
+                # Write the extracted data to the CSV file
+                writer.writerow([page_num + 1, title, author, year])
+
+    print("Extraction complete. The data has been stored in '{}'.".format(output_file))
+
+# Example functions for extracting title, author, and year (replace them with your implementation)
+def extract_title(text):
+    # Extract the title from the text using pattern matching
+    match = re.search(r'Title:\s*(.*)', text, re.IGNORECASE)
+    if match:
+        return match.group(1)
+    else:
+        return ""
+
+def extract_author(text):
+    # Extract the author from the text using pattern matching
+    match = re.search(r'Author:\s*(.*)', text, re.IGNORECASE)
+    if match:
+        return match.group(1)
+    else:
+        return ""
+
+def extract_year(text):
+    # Extract the year from the text using pattern matching
+    match = re.search(r'Year:\s*(\d{4})', text)
+    if match:
+        return match.group(1)
+    else:
+        return ""
+
+# Usage example
+input_pdf = 'example.pdf'  # Replace with the path to your PDF file
+output_csv = 'extracted_data.csv'  # Replace with the desired output CSV file path
+
+extract_pdf_contents(input_pdf, output_csv)
