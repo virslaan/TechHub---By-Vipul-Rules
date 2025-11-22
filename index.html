@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vee Task Tech Hub</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -25,7 +27,7 @@
       top: 0;
       background: #ffffff;
       border-bottom: 1px solid #e5e5e5;
-      padding: 12px 24px;
+      padding: 12px 20px;
       z-index: 100;
       display: flex;
       align-items: center;
@@ -56,7 +58,7 @@
 
     .nav-links {
       display: flex;
-      gap: 24px;
+      gap: 20px;
     }
 
     .nav-link {
@@ -74,79 +76,33 @@
 
     /* Main Content */
     .main-content {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 32px 24px;
+      padding: 32px 20px;
     }
 
     .section {
-      margin-bottom: 48px;
+      margin-bottom: 40px;
     }
 
     .section-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: #000000;
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .section-icon {
-      width: 20px;
-      height: 20px;
-      opacity: 0.6;
-    }
-
-    /* Video Search */
-    .video-search {
-      margin-bottom: 24px;
-    }
-
-    .search-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .search-input {
-      flex: 1;
-      padding: 10px 16px;
-      border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      font-size: 14px;
-      font-family: inherit;
-      background: #ffffff;
-      color: #000000;
-      transition: border-color 0.2s;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: #000000;
-    }
-
-    .search-btn {
-      padding: 10px 20px;
-      border: 1px solid #000000;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      background: #000000;
-      color: #ffffff;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .search-btn:hover {
-      background: #333333;
-    }
-
-    /* Main Video */
-    .main-video {
+    /* Video and Search Section */
+    .video-search-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
       margin-bottom: 32px;
+    }
+
+    /* Video Block - Tiny */
+    .video-block {
+      max-width: 100%;
     }
 
     .video-wrapper {
@@ -162,165 +118,128 @@
       border: none;
     }
 
-    /* Video Results Grid */
-    .video-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .video-result-card {
-      background: #ffffff;
+    /* Tasks - Improved */
+    .task-container {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
       border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .video-result-card:hover {
-      border-color: #000000;
-      transform: translateY(-2px);
-    }
-
-    .video-thumbnail {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000000;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .video-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .play-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 48px;
-      height: 48px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .video-result-card:hover .play-overlay {
-      background: rgba(0, 0, 0, 0.9);
-    }
-
-    .video-info {
-      padding: 12px;
-    }
-
-    .video-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: #000000;
-      margin-bottom: 4px;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .video-channel {
-      font-size: 12px;
-      color: #666666;
-    }
-
-    /* Tasks */
-    .tasks-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    .task-input-area {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
     }
 
     .task-form {
       display: flex;
       gap: 8px;
+      margin-bottom: 20px;
     }
 
     .task-input {
       flex: 1;
-      padding: 10px 16px;
+      padding: 12px 16px;
       border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      font-size: 14px;
+      border-radius: 8px;
+      font-size: 15px;
       font-family: inherit;
       background: #ffffff;
       color: #000000;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
     .task-input:focus {
       outline: none;
       border-color: #000000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
     }
 
     .add-task-btn {
-      padding: 10px 20px;
-      border: 1px solid #000000;
-      border-radius: 6px;
-      font-size: 14px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
       background: #000000;
       color: #ffffff;
-      transition: background 0.2s;
+      transition: all 0.2s;
       font-family: inherit;
+      white-space: nowrap;
     }
 
     .add-task-btn:hover {
       background: #333333;
+      transform: translateY(-1px);
+    }
+
+    .add-task-btn:active {
+      transform: translateY(0);
+    }
+
+    .task-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .task-count {
+      font-size: 13px;
+      color: #666666;
+    }
+
+    .clear-btn {
+      padding: 6px 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #ffffff;
+      color: #666666;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .clear-btn:hover {
+      border-color: #000000;
+      color: #000000;
     }
 
     .task-list {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      max-height: 400px;
+      gap: 6px;
+      max-height: 500px;
       overflow-y: auto;
     }
 
     .task-item {
-      padding: 10px 12px;
-      border-radius: 6px;
+      padding: 12px 14px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      transition: background 0.2s;
+      gap: 12px;
+      transition: all 0.2s;
       cursor: pointer;
+      background: #ffffff;
+      border: 1px solid #f0f0f0;
     }
 
     .task-item:hover {
-      background: #f5f5f5;
+      background: #f8f8f8;
+      border-color: #e5e5e5;
+      transform: translateX(2px);
     }
 
     .task-item.completed {
-      opacity: 0.5;
+      opacity: 0.6;
     }
 
     .task-checkbox {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border: 2px solid #000000;
-      border-radius: 4px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -337,27 +256,29 @@
 
     .task-text {
       flex: 1;
-      font-size: 14px;
+      font-size: 15px;
       color: #000000;
+      line-height: 1.4;
     }
 
     .task-item.completed .task-text {
       text-decoration: line-through;
+      color: #666666;
     }
 
     .task-delete {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border: none;
       background: transparent;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       transition: all 0.2s;
-      color: #666666;
+      color: #999999;
     }
 
     .task-item:hover .task-delete {
@@ -365,38 +286,26 @@
     }
 
     .task-delete:hover {
-      background: #f5f5f5;
-      color: #000000;
+      background: #fee;
+      color: #ff0000;
     }
 
-    .clear-btn {
-      padding: 8px 16px;
-      border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      background: #ffffff;
-      color: #666666;
-      transition: all 0.2s;
-      font-family: inherit;
-      align-self: flex-start;
-    }
-
-    .clear-btn:hover {
-      border-color: #000000;
-      color: #000000;
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999999;
+      font-size: 14px;
     }
 
     /* Library Grid */
     .library-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
     }
 
     .doc-card {
-      padding: 16px;
+      padding: 14px;
       border-radius: 8px;
       border: 1px solid #e5e5e5;
       cursor: pointer;
@@ -410,22 +319,22 @@
     .doc-card:hover {
       border-color: #000000;
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .doc-icon-wrapper {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 4px;
       background: #000000;
     }
 
     .doc-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       color: white;
     }
 
@@ -443,17 +352,125 @@
       letter-spacing: 0.5px;
     }
 
-    .empty-state {
+    /* PDF Search */
+    .pdf-search-container {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e5e5e5;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pdf-search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #ffffff;
+      color: #000000;
+      transition: all 0.2s;
+    }
+
+    .pdf-search-input:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-btn-pdf {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #000000;
+      color: #ffffff;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .search-btn-pdf:hover {
+      background: #333333;
+      transform: translateY(-1px);
+    }
+
+    .search-btn-pdf:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .search-result-item {
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .search-result-item:hover {
+      border-color: #000000;
+      transform: translateX(2px);
+    }
+
+    .result-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 6px;
+    }
+
+    .result-page {
+      font-size: 12px;
+      color: #666666;
+      margin-bottom: 8px;
+    }
+
+    .result-snippet {
+      font-size: 13px;
+      color: #333333;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .result-snippet .highlight {
+      background: #fffacd;
+      font-weight: 500;
+    }
+
+    .search-loading {
       text-align: center;
-      padding: 40px 24px;
+      padding: 20px;
       color: #666666;
       font-size: 14px;
     }
 
-    .loading {
+    .no-results {
       text-align: center;
-      padding: 32px;
-      color: #666666;
+      padding: 40px 20px;
+      color: #999999;
       font-size: 14px;
     }
 
@@ -461,26 +478,92 @@
     @media (max-width: 768px) {
       .top-bar {
         padding: 10px 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .logo {
+        font-size: 14px;
       }
 
       .nav-links {
         gap: 16px;
+        font-size: 13px;
       }
 
       .main-content {
         padding: 24px 16px;
       }
 
-      .tasks-layout {
+      .section {
+        margin-bottom: 32px;
+      }
+
+      .video-search-section {
         grid-template-columns: 1fr;
       }
 
-      .video-results {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      .video-block {
+        max-width: 100%;
+      }
+
+      .pdf-search-container {
+        padding: 16px;
+      }
+
+      .task-container {
+        padding: 16px;
+      }
+
+      .task-form {
+        flex-direction: column;
+      }
+
+      .add-task-btn {
+        width: 100%;
+      }
+
+      .task-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .task-list {
+        max-height: 400px;
       }
 
       .library-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .doc-card {
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .library-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .task-item {
+        padding: 10px 12px;
+      }
+
+      .task-text {
+        font-size: 14px;
       }
     }
 
@@ -516,71 +599,51 @@
       <a class="nav-link" onclick="scrollToSection('library')">Library</a>
     </nav>
   </header>
-
+  
   <!-- Main Content -->
   <main class="main-content">
     <!-- Video Section -->
     <section id="video" class="section">
-      <div class="section-title">
-        <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="23 7 16 12 23 17 23 7"></polygon>
-          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-        </svg>
-        <span>Video Library</span>
-      </div>
-
-      <div class="video-search">
-        <div class="search-bar">
-          <input type="text" class="search-input" id="videoSearchInput" placeholder="Search YouTube videos..." onkeypress="if(event.key==='Enter') searchVideos()">
-          <button class="search-btn" onclick="searchVideos()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            Search
-          </button>
+      <div class="section-title">Video & PDF Search</div>
+      <div class="video-search-section">
+        <div class="video-block">
+          <div class="video-wrapper">
+            <iframe id="videoFrame" src="https://www.youtube.com/embed/56hqrlQxMMI" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="pdf-search-container">
+          <div class="search-form">
+            <input type="text" class="pdf-search-input" id="pdfSearchInput" placeholder="Search PDFs..." onkeypress="if(event.key==='Enter') searchPDFs()">
+            <button class="search-btn-pdf" id="searchBtn" onclick="searchPDFs()">Search</button>
+          </div>
+          <div class="search-results" id="searchResults">
+            <div class="no-results" style="font-size: 12px; padding: 20px;">
+              Enter keywords to search through PDFs. Note: PDFs must be accessible (may require a local server).
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="main-video">
-        <div class="video-wrapper">
-          <iframe id="videoFrame" src="https://www.youtube.com/embed/56hqrlQxMMI" allowfullscreen></iframe>
-        </div>
-      </div>
-
-      <div id="videoResults" class="video-results"></div>
     </section>
 
     <!-- Tasks Section -->
     <section id="tasks" class="section">
-      <div class="section-title">
-        <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="9 11 12 14 22 4"></polyline>
-          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-        </svg>
-        <span>My Tasks</span>
-      </div>
-      <div class="tasks-layout">
-        <div class="task-input-area">
-          <div class="task-form">
-            <input type="text" class="task-input" id="taskInput" placeholder="Add a new task..." onkeypress="if(event.key==='Enter') addTask()">
-            <button class="add-task-btn" onclick="addTask()">Add</button>
-          </div>
+      <div class="section-title">My Tasks</div>
+      <div class="task-container">
+        <div class="task-form">
+          <input type="text" class="task-input" id="taskInput" placeholder="Add a new task..." onkeypress="if(event.key==='Enter') addTask()">
+          <button class="add-task-btn" onclick="addTask()">Add</button>
+        </div>
+        <div class="task-stats">
+          <div class="task-count" id="taskCount">0 tasks</div>
           <button class="clear-btn" onclick="clearTasks()">Clear All</button>
         </div>
         <div class="task-list" id="taskList"></div>
-      </div>
+    </div>
     </section>
 
     <!-- Library Section -->
     <section id="library" class="section">
-      <div class="section-title">
-        <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-        </svg>
-        <span>Document Library</span>
-      </div>
+      <div class="section-title">Document Library</div>
       <div class="library-grid" id="libraryGrid"></div>
     </section>
   </main>
@@ -593,124 +656,10 @@
       event.currentTarget.classList.add('active');
     }
 
-    // YouTube Video Search
-    let currentVideoId = '56hqrlQxMMI';
-
-    async function searchVideos() {
-      const query = document.getElementById('videoSearchInput').value.trim();
-      if (!query) return;
-
-      const resultsContainer = document.getElementById('videoResults');
-      resultsContainer.innerHTML = '<div class="loading">Searching videos...</div>';
-
-      let videoId = extractVideoId(query);
-      if (videoId) {
-        updateMainVideo(videoId);
-        resultsContainer.innerHTML = '';
-        return;
-      }
-
-      try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`)}`;
-        
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        
-        const html = data.contents;
-        const videoIdRegex = /"videoId":"([a-zA-Z0-9_-]{11})"/g;
-        const matches = [...html.matchAll(videoIdRegex)];
-        const uniqueVideoIds = [...new Set(matches.map(m => m[1]))].slice(0, 12);
-        
-        if (uniqueVideoIds.length > 0) {
-          displayVideoResults(uniqueVideoIds, query);
-        } else {
-          showPopularVideos(query);
-        }
-      } catch (error) {
-        console.error('Search error:', error);
-        showPopularVideos(query);
-      }
-    }
-
-    function displayVideoResults(videoIds, query) {
-      const resultsContainer = document.getElementById('videoResults');
-      
-      resultsContainer.innerHTML = videoIds.map((videoId, index) => `
-        <div class="video-result-card" onclick="selectVideo('${videoId}')">
-          <div class="video-thumbnail">
-            <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Video ${index + 1}" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
-            <div class="play-overlay">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                <polygon points="9 5 9 19 19 12 9 5"></polygon>
-              </svg>
-            </div>
-          </div>
-          <div class="video-info">
-            <div class="video-title">Video ${index + 1}</div>
-            <div class="video-channel">Click to play</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function showPopularVideos(query) {
-      const popularVideos = [
-        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', channel: 'Rick Astley' },
-        { id: 'jNQXAC9IVRw', title: 'Me at the zoo', channel: 'jawed' },
-        { id: '9bZkp7q19f0', title: 'PSY - GANGNAM STYLE', channel: 'officialpsy' },
-        { id: 'kJQP7kiw5Fk', title: 'Luis Fonsi - Despacito', channel: 'LuisFonsiVEVO' },
-        { id: 'RgKAFK5djSk', title: 'Wiz Khalifa - See You Again', channel: 'Wiz Khalifa' }
-      ];
-
-      const resultsContainer = document.getElementById('videoResults');
-      resultsContainer.innerHTML = popularVideos.map((video) => `
-        <div class="video-result-card" onclick="selectVideo('${video.id}')">
-          <div class="video-thumbnail">
-            <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
-            <div class="play-overlay">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                <polygon points="9 5 9 19 19 12 9 5"></polygon>
-              </svg>
-            </div>
-          </div>
-          <div class="video-info">
-            <div class="video-title">${video.title}</div>
-            <div class="video-channel">${video.channel}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function selectVideo(videoId) {
-      updateMainVideo(videoId);
-      document.getElementById('videoSearchInput').value = '';
-      document.getElementById('videoResults').innerHTML = '';
-    }
-
-    function extractVideoId(input) {
-      let videoId = null;
-      const watchMatch = input.match(/[?&]v=([^#&?]+)/);
-      if (watchMatch) videoId = watchMatch[1];
-      const shortMatch = input.match(/youtu\.be\/([^#&?]+)/);
-      if (shortMatch) videoId = shortMatch[1];
-      const embedMatch = input.match(/embed\/([^#&?]+)/);
-      if (embedMatch) videoId = embedMatch[1];
-      if (!videoId && /^[a-zA-Z0-9_-]{11}$/.test(input)) {
-        videoId = input;
-      }
-      return videoId;
-    }
-
-    function updateMainVideo(videoId) {
-      currentVideoId = videoId;
-      const frame = document.getElementById('videoFrame');
-      frame.src = `https://www.youtube.com/embed/${videoId}`;
-      localStorage.setItem('currentVideoId', videoId);
-    }
-
+    // Load saved video
     const savedVideoId = localStorage.getItem('currentVideoId');
     if (savedVideoId) {
-      updateMainVideo(savedVideoId);
+      document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${savedVideoId}`;
     }
 
     // Task Management
@@ -732,6 +681,7 @@
       saveTasks();
       renderTasks();
       input.value = '';
+      input.focus();
     }
 
     function deleteTask(id) {
@@ -749,6 +699,7 @@
     }
 
     function clearTasks() {
+      if (tasks.length === 0) return;
       if (confirm('Clear all tasks?')) {
         tasks = [];
         saveTasks();
@@ -760,22 +711,40 @@
       localStorage.setItem('veeTasks', JSON.stringify(tasks));
     }
 
+    function updateTaskCount() {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const countEl = document.getElementById('taskCount');
+      if (total === 0) {
+        countEl.textContent = 'No tasks';
+      } else {
+        countEl.textContent = `${completed}/${total} completed`;
+      }
+    }
+
     function renderTasks() {
       const taskList = document.getElementById('taskList');
+      updateTaskCount();
       
       if (tasks.length === 0) {
         taskList.innerHTML = '<div class="empty-state">No tasks yet. Add one above!</div>';
         return;
       }
 
-      taskList.innerHTML = tasks.map((task) => `
+      // Sort: incomplete first, then completed
+      const sortedTasks = [...tasks].sort((a, b) => {
+        if (a.completed === b.completed) return 0;
+        return a.completed ? 1 : -1;
+      });
+
+      taskList.innerHTML = sortedTasks.map((task) => `
         <div class="task-item ${task.completed ? 'completed' : ''}" onclick="toggleTask(${task.id})">
           <div class="task-checkbox">
             ${task.completed ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
           </div>
           <div class="task-text">${task.text}</div>
           <button class="task-delete" onclick="event.stopPropagation(); deleteTask(${task.id})">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -806,10 +775,10 @@
 
     function getDocIcon(type) {
       const icons = {
-        pdf: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
-        notebook: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
-        image: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
-        folder: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>'
+        pdf: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
+        notebook: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+        image: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
+        folder: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>'
       };
       return icons[type] || icons.pdf;
     }
@@ -843,6 +812,301 @@
         window.open(`./${encodeURIComponent(filename)}`, '_blank');
       }
     }
+
+    // PDF Search Engine - GitHub Pages compatible
+    const pdfCache = new Map();
+    const pdfDocuments = documents.filter(doc => doc.type === 'pdf');
+
+    // Check if running locally (file://) or on web server
+    function isLocalFile() {
+      return window.location.protocol === 'file:';
+    }
+
+    // Initialize PDF.js for GitHub Pages
+    function initPDFJS() {
+      if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        return true;
+      }
+      return false;
+    }
+
+    async function loadPDFText(filename) {
+      if (pdfCache.has(filename)) {
+        return pdfCache.get(filename);
+      }
+
+      try {
+        if (!initPDFJS() || typeof pdfjsLib === 'undefined') {
+          console.error('PDF.js library not loaded');
+          return null;
+        }
+
+        // For GitHub Pages, use relative path
+        const url = `./${encodeURIComponent(filename)}`;
+        
+        console.log(`Loading PDF: ${url}`);
+        
+        // Load PDF with proper configuration for GitHub Pages
+        const loadingTask = pdfjsLib.getDocument({
+          url: url,
+          withCredentials: false,
+          httpHeaders: {},
+          verbosity: 0,
+          cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+          cMapPacked: true
+        });
+        
+        const pdf = await loadingTask.promise;
+        console.log(`PDF loaded: ${filename}, pages: ${pdf.numPages}`);
+        
+        const textByPage = [];
+
+        // Limit to first 30 pages for performance on GitHub Pages
+        const maxPages = Math.min(pdf.numPages, 30);
+        
+        for (let i = 1; i <= maxPages; i++) {
+          try {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            if (pageText.trim().length > 0) {
+              textByPage.push({
+                pageNum: i,
+                text: pageText.toLowerCase()
+              });
+            }
+          } catch (pageError) {
+            console.warn(`Error loading page ${i} of ${filename}:`, pageError);
+            // Continue with other pages
+          }
+        }
+
+        if (textByPage.length === 0) {
+          console.warn(`No text extracted from ${filename}`);
+          return null;
+        }
+
+        const result = {
+          filename,
+          pages: textByPage,
+          totalPages: pdf.numPages
+        };
+
+        pdfCache.set(filename, result);
+        console.log(`Cached PDF: ${filename} with ${textByPage.length} pages`);
+        return result;
+      } catch (error) {
+        console.error(`Error loading PDF ${filename}:`, error);
+        // Return null but don't throw - allow other PDFs to be searched
+        return null;
+      }
+    }
+
+    function calculateRelevanceScore(pageText, queryTerms) {
+      let score = 0;
+      const text = pageText.toLowerCase();
+      
+      queryTerms.forEach(term => {
+        // Count occurrences
+        const regex = new RegExp(term, 'gi');
+        const matches = text.match(regex);
+        const count = matches ? matches.length : 0;
+        
+        // Score based on frequency
+        score += count * 10;
+        
+        // Bonus for exact phrase match
+        if (text.includes(queryTerms.join(' '))) {
+          score += 50;
+        }
+        
+        // Bonus for term at start of sentence/paragraph
+        if (text.includes(` ${term}`) || text.startsWith(term)) {
+          score += 5;
+        }
+      });
+
+      return score;
+    }
+
+    function highlightText(text, queryTerms, maxLength = 150) {
+      let highlighted = text;
+      queryTerms.forEach(term => {
+        const regex = new RegExp(`(${term})`, 'gi');
+        highlighted = highlighted.replace(regex, '<span class="highlight">$1</span>');
+      });
+
+      // Find first match position
+      const firstMatch = queryTerms.find(term => 
+        highlighted.toLowerCase().includes(term.toLowerCase())
+      );
+      
+      if (firstMatch) {
+        const index = highlighted.toLowerCase().indexOf(firstMatch.toLowerCase());
+        const start = Math.max(0, index - 50);
+        const end = Math.min(highlighted.length, index + maxLength);
+        highlighted = highlighted.substring(start, end);
+        if (start > 0) highlighted = '...' + highlighted;
+        if (end < text.length) highlighted = highlighted + '...';
+      }
+
+      return highlighted;
+    }
+
+    async function searchPDFs() {
+      const query = document.getElementById('pdfSearchInput').value.trim();
+      if (!query) {
+        document.getElementById('searchResults').innerHTML = '<div class="no-results">Enter a search term</div>';
+        return;
+      }
+
+      // Check if running locally
+      if (isLocalFile()) {
+        document.getElementById('searchResults').innerHTML = `
+          <div class="no-results" style="text-align: left; padding: 20px;">
+            <strong>Local File Detected</strong><br><br>
+            PDF search requires a web server (CORS restrictions).<br><br>
+            <strong>To test locally:</strong><br>
+            1. Run: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">python -m http.server 8000</code><br>
+            2. Open: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">http://localhost:8000</code><br><br>
+            <strong>Or deploy to GitHub Pages</strong> - it will work automatically!
+          </div>
+        `;
+        return;
+      }
+
+      if (typeof pdfjsLib === 'undefined') {
+        document.getElementById('searchResults').innerHTML = '<div class="no-results">PDF.js library not loaded. Please refresh the page.</div>';
+        return;
+      }
+
+      const searchBtn = document.getElementById('searchBtn');
+      const resultsContainer = document.getElementById('searchResults');
+      
+      searchBtn.disabled = true;
+      searchBtn.textContent = 'Searching...';
+      resultsContainer.innerHTML = '<div class="search-loading">Searching PDFs... This may take a moment.</div>';
+
+      try {
+        const queryTerms = query.toLowerCase().split(/\s+/).filter(t => t.length > 0);
+        const allResults = [];
+
+        if (pdfDocuments.length === 0) {
+          resultsContainer.innerHTML = '<div class="no-results">No PDFs found in library</div>';
+          searchBtn.disabled = false;
+          searchBtn.textContent = 'Search';
+          return;
+        }
+
+        // Search through all PDFs
+        for (let i = 0; i < pdfDocuments.length; i++) {
+          const doc = pdfDocuments[i];
+          resultsContainer.innerHTML = `<div class="search-loading">Searching PDFs... (${i + 1}/${pdfDocuments.length})</div>`;
+          
+          try {
+            const pdfData = await loadPDFText(doc.filename);
+            if (!pdfData) {
+              console.warn(`Could not load PDF: ${doc.filename}`);
+              continue;
+            }
+
+            pdfData.pages.forEach(page => {
+              const score = calculateRelevanceScore(page.text, queryTerms);
+              if (score > 0) {
+                const originalText = pdfData.pages.find(p => p.pageNum === page.pageNum)?.text || page.text;
+                const snippet = highlightText(originalText, queryTerms);
+                allResults.push({
+                  filename: doc.filename,
+                  name: doc.name,
+                  pageNum: page.pageNum,
+                  score,
+                  snippet
+                });
+              }
+            });
+          } catch (error) {
+            console.error(`Error searching PDF ${doc.filename}:`, error);
+          }
+        }
+
+        // Sort by relevance score (highest first)
+        allResults.sort((a, b) => b.score - a.score);
+
+        // Show top 3 results
+        const topResults = allResults.slice(0, 3);
+
+        if (topResults.length === 0) {
+          resultsContainer.innerHTML = '<div class="no-results">No matches found. Try different keywords.</div>';
+        } else {
+          resultsContainer.innerHTML = topResults.map(result => `
+            <div class="search-result-item" onclick="openPDFPage('${result.filename}', ${result.pageNum})">
+              <div class="result-title">${result.name}</div>
+              <div class="result-page">Page ${result.pageNum}</div>
+              <div class="result-snippet">${result.snippet}</div>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        let errorMsg = 'Error searching PDFs. ';
+        if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+          errorMsg += 'CORS error - make sure PDFs are accessible on GitHub Pages.';
+        } else {
+          errorMsg += 'Check console for details.';
+        }
+        resultsContainer.innerHTML = `<div class="no-results">${errorMsg}</div>`;
+      }
+
+      searchBtn.disabled = false;
+      searchBtn.textContent = 'Search';
+    }
+
+    function openPDFPage(filename, pageNum) {
+      // For GitHub Pages, open PDF with page anchor
+      const url = `./${encodeURIComponent(filename)}#page=${pageNum}`;
+      window.open(url, '_blank');
+    }
+
+    // Initialize PDF.js and check setup for GitHub Pages
+    window.addEventListener('load', () => {
+      const resultsContainer = document.getElementById('searchResults');
+      
+      // Check if running locally
+      if (isLocalFile()) {
+        if (resultsContainer) {
+          resultsContainer.innerHTML = `
+            <div class="no-results" style="text-align: left; padding: 20px; font-size: 13px;">
+              <strong>⚠️ Local File Mode Detected</strong><br><br>
+              PDF search won't work with <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">file://</code> protocol due to browser security.<br><br>
+              <strong>Quick Test (Local Server):</strong><br>
+              <code style="background: #f0f0f0; padding: 4px 8px; border-radius: 4px; display: block; margin: 8px 0;">python3 -m http.server 8000</code>
+              Then open: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">http://localhost:8000</code><br><br>
+              <strong>Or deploy to GitHub Pages</strong> - search will work automatically! 🚀
+            </div>
+          `;
+        }
+        return;
+      }
+
+      if (typeof pdfjsLib === 'undefined') {
+        console.error('PDF.js library failed to load');
+        if (resultsContainer) {
+          resultsContainer.innerHTML = '<div class="no-results" style="color: #ff0000;">PDF.js library not loaded. Please check your internet connection and refresh.</div>';
+        }
+      } else {
+        initPDFJS();
+        console.log('PDF.js loaded successfully for GitHub Pages');
+        console.log(`Found ${pdfDocuments.length} PDFs to search:`, pdfDocuments.map(d => d.name));
+        
+        // Show initial message
+        if (resultsContainer && resultsContainer.innerHTML.includes('Enter keywords')) {
+          resultsContainer.innerHTML = `<div class="no-results" style="font-size: 12px; padding: 20px;">
+            ✅ Ready to search ${pdfDocuments.length} PDFs. Enter keywords above.
+          </div>`;
+        }
+      }
+    });
 
     // Initialize
     renderTasks();
